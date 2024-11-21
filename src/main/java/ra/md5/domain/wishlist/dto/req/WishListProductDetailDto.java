@@ -7,17 +7,16 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class WishListDto {
+public class WishListProductDetailDto {
     Integer wishListId;
     String sku;
     String productName;
-    String description;
     BigDecimal unitPrice;
-    Integer stock;
+    String description;
+    Integer quantity;
     String image;
 }

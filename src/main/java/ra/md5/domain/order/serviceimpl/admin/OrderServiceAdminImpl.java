@@ -49,35 +49,6 @@ public class OrderServiceAdminImpl implements OrderServiceAdmin {
 
     @Override
     public OrderResponse getOrderStatus(String orderStatus) {
-        // Kiểm tra và chuyển đổi trạng thái đơn hàng
-        OrderStatus statusEnum;
-        try {
-            statusEnum = OrderStatus.valueOf(orderStatus.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            return new OrderResponse(400, HttpStatus.NOT_FOUND, null);
-        }
-        // Lấy tất cả đơn hàng từ repository
-        List<Order> orders = orderRepository.findAll();
-        // Chuyển đổi các đối tượng Order thành OrderGetAllOrderDto
-        List<OrderResDto> orderDtos = orders.stream()
-                .map(order -> new OrderResDto(
-                        order.getOrderId(),
-                        order.getTotalPrice(),
-                        order.getStatus().name(),
-                        order.getNote(),
-                        order.getReceiveName(),
-                        order.getReceiveAddress(),
-                        order.getReceivePhone(),
-                        order.getCreatedAt(),
-                        order.getUpdatedAt(),
-                        order.getUser() != null ? order.getUser().getUsername() : null
-                ))
-                .collect(Collectors.toList());
-        //Tạo phản hồi
-        OrderResponse response = new OrderResponse();
-        response.setCode(200);
-        response.setMessage(HttpStatus.OK);
-        response.setData(orderDtos);
-        return response;
+        return null;
     }
 }

@@ -30,9 +30,10 @@ import ra.md5.domain.user.dto.res.user.UserChangePasswordResponse;
 import ra.md5.domain.user.dto.res.user.UserDetailsResponse;
 import ra.md5.domain.user.dto.res.user.UserUpdateResponse;
 import ra.md5.domain.user.service.user.UserService;
-import ra.md5.domain.wishlist.dto.req.WishListAddProductDto;
-import ra.md5.domain.wishlist.dto.res.WishListAddProductResponse;
+import ra.md5.domain.wishlist.dto.req.WishlistRequest;
+import ra.md5.domain.wishlist.dto.res.WishListAddResponse;
 import ra.md5.domain.wishlist.dto.res.WishListListResponse;
+import ra.md5.domain.wishlist.repository.WishListRepository;
 import ra.md5.domain.wishlist.service.WishListService;
 
 @RestController
@@ -41,8 +42,8 @@ import ra.md5.domain.wishlist.service.WishListService;
 public class UserController {
     private final UserService userService;
     private final OrderService orderService;
-    private final AddressService addressService;
     private final WishListService wishListService;
+    private final AddressService addressService;
     private final ShoppingCartService shoppingCartService;
 
     //ACCOUNT
@@ -142,13 +143,20 @@ public class UserController {
 
     //WISHLIST
     @PostMapping("/wish-list")
-    public ResponseEntity<WishListAddProductResponse> addProductToWishList(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom, @RequestBody WishListAddProductDto request){
-        WishListAddProductResponse wishListAddProductResponse = wishListService.addWishList(userDetailsCustom, request);
-        return new ResponseEntity<>(wishListAddProductResponse, HttpStatus.CREATED);
+    public ResponseEntity<WishListAddResponse> addToWishlist(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom, @RequestBody WishlistRequest request) {
+        WishListAddResponse response = wishListService.addWishList(userDetailsCustom, request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
     @GetMapping("/wish-list")
-    public ResponseEntity<WishListListResponse> listWishList(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom){
-        WishListListResponse wishList = wishListService.listWishList(userDetailsCustom);
-        return new ResponseEntity<>(wishList, HttpStatus.OK);
+    public ResponseEntity<WishListListResponse> getWishlist(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom) {
+        WishListListResponse getAllWishList = wishListService.getAllWishList(userDetailsCustom);
+        return new ResponseEntity<>(getAllWishList, HttpStatus.OK);
     }
+//
+//    // Xóa sản phẩm khỏi danh sách yêu thích
+//    @DeleteMapping("/wish-list/{wishlistId}")
+//    public ResponseEntity<?> removeFromWishlist(@PathVariable String wishlistId) {
+//        wishlistService.removeProductFromWishlist(wishlistId);
+//        return ResponseEntity.ok("Product removed from wishlist");
+//    }
 }

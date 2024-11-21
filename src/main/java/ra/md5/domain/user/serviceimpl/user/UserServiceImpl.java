@@ -3,6 +3,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ra.md5.common.security.jwt.JWTUtils;
@@ -10,7 +11,10 @@ import ra.md5.common.security.principal.UserDetailsCustom;
 import ra.md5.common.utils.UploadService;
 import ra.md5.domain.address.entity.Address;
 import ra.md5.domain.enums.EnumRole;
+import ra.md5.domain.product.entity.Product;
 import ra.md5.domain.product.exception.ImageUploadException;
+import ra.md5.domain.product.exception.ProductNotFoundException;
+import ra.md5.domain.product.repository.ProductRepository;
 import ra.md5.domain.role.dto.RoleDto;
 import ra.md5.domain.role.entity.Role;
 import ra.md5.domain.role.repository.RoleRepository;
@@ -34,6 +38,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final ProductRepository productRepository;
     private final UploadService uploadService;
     private final JWTUtils jwtUtils;
     private final ModelMapper modelMapper;
@@ -193,4 +198,5 @@ public class UserServiceImpl implements UserService {
         response.setData("Đổi mật khẩu thành công");
         return response;
     }
+
 }

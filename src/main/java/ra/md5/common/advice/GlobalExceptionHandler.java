@@ -25,10 +25,8 @@ import ra.md5.domain.user.dto.res.user.ResponseError;
 import ra.md5.domain.user.exception.DuplicateException;
 import ra.md5.domain.user.exception.InvalidCredentialsException;
 import ra.md5.domain.user.exception.NotFoundException;
-import ra.md5.domain.wishlist.exception.DuplicateProductException;
 import ra.md5.domain.wishlist.exception.WishListException;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -109,20 +107,16 @@ public class GlobalExceptionHandler {
         errors.put("username", e.getMessage());
         return new ResponseEntity<>(new ResponseError(401,HttpStatus.UNAUTHORIZED,errors), HttpStatus.UNAUTHORIZED);
     }
-    @ExceptionHandler(DuplicateProductException.class)
-    public ResponseEntity<ResponseError> handleDuplicateData(DuplicateProductException e){
-        return new ResponseEntity<>(new ResponseError(409,HttpStatus.CONFLICT,e.getMessage()), HttpStatus.CONFLICT);
-    }
-    @ExceptionHandler(WishListException.class)
-    public ResponseEntity<ResponseError> handleDuplicateData(WishListException e){
-        return new ResponseEntity<>(new ResponseError(409,HttpStatus.CONFLICT,e.getMessage()), HttpStatus.CONFLICT);
-    }
     @ExceptionHandler(QuantityEnoughException.class)
     public ResponseEntity<ResponseError> handleDuplicateData(QuantityEnoughException e){
         return new ResponseEntity<>(new ResponseError(422,HttpStatus.UNPROCESSABLE_ENTITY,e.getMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
     }
     @ExceptionHandler(OrderException.class)
     public ResponseEntity<ResponseError> NotFoundException(OrderException e){
+        return new ResponseEntity<>(new ResponseError(404,HttpStatus.NOT_FOUND,e.getMessage()), HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(WishListException.class)
+    public ResponseEntity<ResponseError> NotFoundException(WishListException e){
         return new ResponseEntity<>(new ResponseError(404,HttpStatus.NOT_FOUND,e.getMessage()), HttpStatus.NOT_FOUND);
     }
 }

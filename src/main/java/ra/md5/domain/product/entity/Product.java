@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ra.md5.domain.category.entity.Category;
+import ra.md5.domain.wishlist.entity.WishList;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -20,7 +21,8 @@ import java.time.LocalDateTime;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int productId;
+    @Column(name = "product_id")
+    Integer productId;
 
     @Column(name = "sku", length = 15, nullable = false, unique = true)
     String sku;
@@ -36,7 +38,7 @@ public class Product {
     BigDecimal unitPrice;
 
     @Column(name = "stock", nullable = false)
-    int stock;
+    Integer stock;
 
     @Column(name = "image")
     String image;

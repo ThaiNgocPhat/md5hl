@@ -6,10 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
-import ra.md5.domain.wishlist.dto.req.WishListDto;
+import ra.md5.domain.wishlist.dto.req.WishListProductDetailDto;
 
 import java.util.List;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -17,5 +16,5 @@ import java.util.List;
 public class WishListListResponse {
     int code;
     HttpStatus message;
-    List<WishListDto> data;
+    List<WishListProductDetailDto> data;
 }

@@ -6,14 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
-import ra.md5.domain.wishlist.dto.req.WishListDto;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class WishListAddProductResponse {
+public class WishListAddResponse {
     int code;
     HttpStatus message;
-    WishListDto data;
+    String data;
 }

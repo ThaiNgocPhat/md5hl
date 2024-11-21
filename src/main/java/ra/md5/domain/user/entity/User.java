@@ -1,16 +1,13 @@
 package ra.md5.domain.user.entity;
-
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ra.md5.domain.address.entity.Address;
+import ra.md5.domain.product.entity.Product;
 import ra.md5.domain.role.entity.Role;
-import ra.md5.domain.wishlist.entity.WishList;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -60,31 +57,11 @@ public class User{
     inverseJoinColumns =  @JoinColumn(name = "role_id"))
     List<Role> roles;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<WishList> wishLists;
-
     @Column(name = "created_at",updatable = false)
     LocalDateTime createdAt;
 
     @Column(name = "update_at")
     LocalDateTime updateAt;
-
-    public User(User user) {
-        this.userId = user.getUserId();
-        this.username = user.getUsername();
-        this.email = user.getEmail();
-        this.firstName = user.getFirstName();
-        this.lastName = user.getLastName();
-        this.password = user.getPassword();
-        this.avatar = user.getAvatar();
-        this.phone = user.getPhone();
-        this.addresses = user.getAddresses();
-        this.status = user.isStatus();
-        this.isDelete = user.isDelete();
-        this.roles = user.getRoles();
-        this.createdAt = user.getCreatedAt();
-        this.updateAt = user.getUpdateAt();
-    }
 
     @PrePersist
     public void prePersist(){

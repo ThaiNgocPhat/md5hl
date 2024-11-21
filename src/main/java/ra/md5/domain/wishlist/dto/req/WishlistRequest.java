@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class WishListAddProductDto {
+public class WishlistRequest {
     private Integer productId;
 }
