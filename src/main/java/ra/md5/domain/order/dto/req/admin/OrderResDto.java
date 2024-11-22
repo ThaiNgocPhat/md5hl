@@ -21,6 +21,5 @@ public class OrderResDto {
     String receiveAddress;
     String receivePhone;
     LocalDateTime createdAt;
-    LocalDateTime receivedAt;
     String username;
 }

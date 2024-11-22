@@ -30,6 +30,7 @@ import ra.md5.domain.user.exception.NotFoundException;
 import ra.md5.domain.user.repository.UserRepository;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -51,12 +52,18 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         User user = userRepository.findByUsername(userDetailsCustom.getUsername())
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng"));
 
-        // Lấy danh sách giỏ hàng của người dùng (giả sử có Cart entity)
+        // Lấy danh sách giỏ hàng của người dùng
         List<ShoppingCart> shoppingCarts = shoppingCartRepository.findByUser(user);
 
         // Ánh xạ từ ShoppingCart entity sang ShoppingCartListCartDto
         List<ShoppingCartListCartDto> shoppingCartDtos = shoppingCarts.stream()
-                .map(cart -> modelMapper.map(cart, ShoppingCartListCartDto.class))
+                .map(cart -> {
+                    // Mappings for ShoppingCartListCartDto
+                    ShoppingCartListCartDto dto = modelMapper.map(cart, ShoppingCartListCartDto.class);
+                    // Manually set the productName from the Product entity
+                    dto.setProductName(cart.getProduct().getProductName());
+                    return dto;
+                })
                 .collect(Collectors.toList());
 
         // Tạo phản hồi
@@ -68,20 +75,24 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return response;
     }
 
+
     @Override
     public ShoppingCartAddResponse addToCart(UserDetailsCustom userDetailsCustom, ShoppingCartAddDto request) {
         // Kiểm tra người dùng có tồn tại
         User user = userRepository.findByUsername(userDetailsCustom.getUsername())
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng"));
+
         // Kiểm tra sản phẩm có tồn tại
         Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(() -> new ProductNotFoundException("Không tìm thấy mã sản phẩm: " + request.getProductId()));
+
         // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
         Optional<ShoppingCart> existingCartOptional = shoppingCartRepository.findByUserAndProduct(user, product);
         ShoppingCart shoppingCart;
+
         if (existingCartOptional.isPresent()) {
             // Nếu sản phẩm đã có trong giỏ hàng, cộng thêm số lượng
-            shoppingCart = existingCartOptional.get(); // Lấy giỏ hàng từ Optional
+            shoppingCart = existingCartOptional.get();
             shoppingCart.setOrderQuantity(shoppingCart.getOrderQuantity() + request.getOrderQuantity());
             shoppingCart.setTotalPrice(product.getUnitPrice().multiply(BigDecimal.valueOf(shoppingCart.getOrderQuantity())));
             // Lưu giỏ hàng đã cập nhật
@@ -96,15 +107,22 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             // Lưu giỏ hàng mới
             shoppingCartRepository.save(shoppingCart);
         }
-        // Ánh xạ ShoppingCart sang ShoppingCartAddResDto
-        ShoppingCartAddResDto responseDto = modelMapper.map(shoppingCart, ShoppingCartAddResDto.class);
+
+        // Tạo ShoppingCartAddResDto và ánh xạ dữ liệu
+        ShoppingCartAddResDto responseDto = new ShoppingCartAddResDto();
+        responseDto.setProductName(shoppingCart.getProduct().getProductName());
+        responseDto.setOrderQuantity(shoppingCart.getOrderQuantity());
+        responseDto.setTotalPrice(shoppingCart.getTotalPrice());
+
         // Tạo phản hồi
         ShoppingCartAddResponse response = new ShoppingCartAddResponse();
         response.setCode(200);
         response.setMessage(HttpStatus.OK);
         response.setData(responseDto);
+
         return response;
     }
+
 
     @Override
     public ShoppingCartResponse changeOrderQuantity(UserDetailsCustom userDetailsCustom, Integer cartItem, ShoppingCartChangeQuantityDto request) {
@@ -221,7 +239,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             product.setStock(product.getStock() - item.getOrderQuantity());
             productRepository.save(product);
         }
-
+//        List<Product> updatedProducts = new ArrayList<>();
+//        for (ShoppingCart cartItem : shoppingCartList) {
+//            Product product = cartItem.getProduct();
+//            product.setSoldCount(product.getSoldCount() + cartItem.getOrderQuantity());
+//            updatedProducts.add(product);
+//        }
+//        productRepository.saveAll(updatedProducts);  // Lưu tất cả sản phẩm cùng lúc
         // Xóa giỏ hàng sau khi thanh toán
         shoppingCartRepository.deleteAll(shoppingCartList);
 

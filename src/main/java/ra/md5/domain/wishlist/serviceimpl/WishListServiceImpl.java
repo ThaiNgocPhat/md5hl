@@ -40,13 +40,13 @@ public class WishListServiceImpl implements WishListService {
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng"));
 
         // Kiểm tra nếu wishlist của người dùng đã tồn tại
-        WishList wishList = wishListRepository.findByUser(user)
+        WishList wishList = wishListRepository.findFreshWishListByUser(user)
                 .orElseGet(() -> {
-                    // Nếu không có wishlist thì tạo mới
                     WishList newWishList = new WishList();
                     newWishList.setUser(user);
-                    return wishListRepository.save(newWishList);  // Lưu wishlist mới vào DB
+                    return wishListRepository.save(newWishList);
                 });
+
 
         // Kiểm tra nếu sản phẩm đã có trong wishlist của người dùng
         if (wishList.getProducts().contains(product)) {

@@ -45,21 +45,25 @@ public class Order {
     @Column(name = "created_at")
     LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
-    LocalDateTime updatedAt;
+    @Column(name = "received_at")
+    LocalDateTime receivedAt;
+
+    @Column(name = "confirmed_at")
+    LocalDateTime confirmedAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @PrePersist
-    protected void onCreate() {
+    public void prePersist() {
         this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
     }
-
+    //Giao nhận 4 ngày
     @PreUpdate
-    protected void update() {
-        updatedAt = LocalDateTime.now();
+    public void preUpdate() {
+        if (this.status == OrderStatus.DELIVERY && this.receivedAt == null) {
+            this.receivedAt = LocalDateTime.now().plusDays(4);
+        }
     }
 }

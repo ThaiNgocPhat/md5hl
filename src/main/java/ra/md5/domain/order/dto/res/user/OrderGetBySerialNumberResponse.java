@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
-import ra.md5.domain.order.dto.req.OrderDto;
+import ra.md5.domain.order.dto.req.user.OrderDto;
 
 @AllArgsConstructor
 @NoArgsConstructor

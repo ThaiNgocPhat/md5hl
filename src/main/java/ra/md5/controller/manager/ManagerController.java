@@ -12,6 +12,9 @@ import ra.md5.domain.category.dto.res.manager.CategoryResponse;
 import ra.md5.domain.category.dto.res.manager.CategoryUpdateResponse;
 import ra.md5.domain.category.entity.Category;
 import ra.md5.domain.category.service.manager.CategoryServiceManager;
+import ra.md5.domain.order.dto.req.manager.OrderChangeDto;
+import ra.md5.domain.order.dto.res.manager.OrderChangeResponse;
+import ra.md5.domain.order.service.manager.OrderServiceManager;
 import ra.md5.domain.product.dto.req.manager.ProductAddDto;
 import ra.md5.domain.product.dto.req.manager.ProductUpdateDto;
 import ra.md5.domain.product.dto.res.manager.ProductAddResponse;
@@ -30,6 +33,7 @@ public class ManagerController {
     private final CategoryServiceManager categoryServiceManager;
     private final ProductServiceManager productServiceManager;
     private final UserServiceManager userServiceManager;
+    private final OrderServiceManager orderServiceManager;
 
     // CATEGORY
     @PostMapping("/categories")
@@ -82,5 +86,12 @@ public class ManagerController {
     public ResponseEntity<UserChangeStatusResponse> changeStatus(@PathVariable String userId){
         UserChangeStatusResponse response = userServiceManager.changeStatus(userId);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    //ORDER
+    @PutMapping("/orders/{orderId}/status")
+    public ResponseEntity<OrderChangeResponse> changeOrderStatus(@PathVariable Integer orderId, @RequestBody OrderChangeDto request){
+        OrderChangeResponse order = orderServiceManager.changeStatusOrder(orderId, request);
+        return new ResponseEntity<>(order, HttpStatus.OK);
     }
 }

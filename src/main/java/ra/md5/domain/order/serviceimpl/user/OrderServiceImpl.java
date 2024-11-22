@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ra.md5.common.security.principal.UserDetailsCustom;
 import ra.md5.domain.enums.OrderStatus;
-import ra.md5.domain.order.dto.req.OrderDto;
+import ra.md5.domain.order.dto.req.user.OrderDto;
 import ra.md5.domain.order.dto.res.user.OrderCancelResponse;
 import ra.md5.domain.order.dto.res.user.OrderGetBySerialNumberResponse;
 import ra.md5.domain.order.dto.res.user.OrderGetStatusResponse;
@@ -21,6 +21,7 @@ import ra.md5.domain.user.entity.User;
 import ra.md5.domain.user.exception.NotFoundException;
 import ra.md5.domain.user.repository.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,14 +43,41 @@ public class OrderServiceImpl implements OrderService {
             throw new NotFoundException("Không có đơn hàng nào");
         }
         // Chuyển đổi danh sách Order sang danh sách OrderDto
-        List<OrderDto> orderHistoryDtos = orders.stream()
-                .map(order -> modelMapper.map(order, OrderDto.class))
+        List<OrderDto> ordersDto = orders.stream()
+                .map(order -> {
+                    // Nếu trạng thái đơn hàng là CANCEL, không trả về receivedAt
+                    if (order.getStatus() == OrderStatus.CANCEL) {
+                        return new OrderDto(
+                                order.getOrderId(),
+                                order.getSerialNumber(),
+                                order.getTotalPrice(),
+                                order.getStatus(),
+                                order.getReceiveName(),
+                                order.getReceivePhone(),
+                                order.getReceiveAddress(),
+                                order.getCreatedAt(),
+                                null // Trường receivedAt không xuất hiện khi trạng thái là CANCEL
+                        );
+                    } else {
+                        return new OrderDto(
+                                order.getOrderId(),
+                                order.getSerialNumber(),
+                                order.getTotalPrice(),
+                                order.getStatus(),
+                                order.getReceiveName(),
+                                order.getReceivePhone(),
+                                order.getReceiveAddress(),
+                                order.getCreatedAt(),
+                                order.getReceivedAt() // Trả về ngày nhận nếu trạng thái khác CANCEL
+                        );
+                    }
+                })
                 .collect(Collectors.toList());
         // Trả phản hồi
         OrderHistoryResponse response = new OrderHistoryResponse();
         response.setCode(200);
         response.setMessage(HttpStatus.OK);
-        response.setData(orderHistoryDtos);
+        response.setData(ordersDto);
         return response;
     }
 
@@ -76,7 +104,6 @@ public class OrderServiceImpl implements OrderService {
         // Kiểm tra người dùng có tồn tại
         User user = userRepository.findByUsername(userDetailsCustom.getUsername())
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng"));
-
         // Kiểm tra trạng thái đơn hàng hợp lệ
         OrderStatus orderStatusEnum;
         try {
@@ -84,15 +111,27 @@ public class OrderServiceImpl implements OrderService {
         } catch (IllegalArgumentException e) {
             throw new OrderStatusException("Trạng thái đơn hàng không hợp lệ");
         }
-
+        // Nếu trạng thái yêu cầu là CANCEL, kiểm tra các điều kiện
+        if (orderStatusEnum == OrderStatus.CANCEL) {
+            // Lấy tất cả các đơn hàng của user
+            List<Order> orders = orderRepository.findByUser(user);
+            // Kiểm tra điều kiện không được hủy các đơn hàng đã chấp nhận
+            boolean hasInvalidOrders = orders.stream()
+                    .anyMatch(order ->
+                            (order.getStatus() == OrderStatus.CONFIRM ||
+                                    order.getStatus() == OrderStatus.DELIVERY ||
+                                    order.getStatus() == OrderStatus.SUCCESS)
+                    );
+            if (hasInvalidOrders) {
+                throw new OrderStatusException("Không thể hủy các đơn hàng đã được chấp nhận, đang giao, hoặc đã hoàn tất.");
+            }
+        }
         // Lấy danh sách đơn hàng theo trạng thái
         List<Order> orders = orderRepository.findByUserAndStatus(user, orderStatusEnum);
-
         // Kiểm tra nếu không có đơn hàng
         if (orders.isEmpty()) {
             throw new NotFoundException("Không tìm thấy đơn hàng nào với trạng thái: " + orderStatus);
         }
-
         // Chuyển đổi danh sách Order sang danh sách OrderDto
         List<OrderDto> orderDtos = orders.stream()
                 .map(order -> modelMapper.map(order, OrderDto.class))
@@ -105,6 +144,7 @@ public class OrderServiceImpl implements OrderService {
         return response;
     }
 
+
     @Override
     public OrderCancelResponse cancelOrder(UserDetailsCustom userDetailsCustom, Integer orderId) {
         // Kiểm tra người dùng có tồn tại
@@ -115,7 +155,7 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new OrderIdNotFoundException("Không tìm thấy đơn hàng với id " + orderId));
         // Kiểm tra trạng thái của đơn hàng
         if (!order.getStatus().equals(OrderStatus.WAITING)) {
-            return new OrderCancelResponse(400, HttpStatus.NOT_FOUND, "Đơn hàng không thể hủy vì không phải trạng thái chờ xác nhận");
+            return new OrderCancelResponse(200, HttpStatus.OK, "Đơn hàng không thể hủy vì vì đã được chấp nhận");
         }
         order.setStatus(OrderStatus.CANCEL);
         //Lưu thay đổi

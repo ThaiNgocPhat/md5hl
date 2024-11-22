@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ra.md5.domain.order.dto.res.admin.OrderDetailsResponse;
 import ra.md5.domain.order.dto.res.admin.OrderResponse;
 import ra.md5.domain.order.service.admin.OrderServiceAdmin;
 
@@ -23,5 +24,10 @@ public class OrderController {
     public ResponseEntity<OrderResponse> getOrderStatus(@PathVariable String orderStatus){
         OrderResponse orderList = orderServiceAdmin.getOrderStatus(orderStatus);
         return new ResponseEntity<>(orderList, HttpStatus.OK);
+    }
+    @GetMapping("/orderId/{orderId}")
+    public ResponseEntity<OrderDetailsResponse> getOrderDetails(@PathVariable Integer orderId){
+        OrderDetailsResponse orderDetails = orderServiceAdmin.orderDetails(orderId);
+        return new ResponseEntity<>(orderDetails, HttpStatus.OK);
     }
 }

@@ -43,6 +43,9 @@ public class Product {
     @Column(name = "image")
     String image;
 
+    @Column(name = "sold_count")
+    Integer soldCount = 0;
+
     @Column(name = "status")
     boolean status = true;
 

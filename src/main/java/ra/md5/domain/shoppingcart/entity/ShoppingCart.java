@@ -25,11 +25,11 @@ public class ShoppingCart {
     @Column(name = "total_price", nullable = false)
     BigDecimal totalPrice;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+    Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    User user;
 }

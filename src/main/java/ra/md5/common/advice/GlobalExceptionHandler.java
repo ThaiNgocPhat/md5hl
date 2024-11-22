@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ra.md5.domain.address.exception.AddressNotFoundException;
 import ra.md5.domain.category.exception.CategoryNotFoundException;
-import ra.md5.domain.order.exception.OrderException;
-import ra.md5.domain.order.exception.OrderIdNotFoundException;
-import ra.md5.domain.order.exception.OrderStatusException;
-import ra.md5.domain.order.exception.SerialNumberNotFound;
+import ra.md5.domain.order.exception.*;
 import ra.md5.domain.product.exception.ProductNotFoundException;
 import ra.md5.domain.product.exception.ProductSearchException;
 import ra.md5.domain.role.exception.DuplicateRoleException;
@@ -42,6 +39,10 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(AddressNotFoundException.class)
     public ResponseEntity<ResponseError> NotFoundException(AddressNotFoundException e){
+        return new ResponseEntity<>(new ResponseError(404,HttpStatus.NOT_FOUND,e.getMessage()), HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(InvalidRequestException.class)
+    public ResponseEntity<ResponseError> NotFoundException(InvalidRequestException e){
         return new ResponseEntity<>(new ResponseError(404,HttpStatus.NOT_FOUND,e.getMessage()), HttpStatus.NOT_FOUND);
     }
     @ExceptionHandler(NotItemsException.class)

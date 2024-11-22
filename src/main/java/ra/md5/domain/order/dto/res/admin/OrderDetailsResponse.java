@@ -1,19 +1,17 @@
-package ra.md5.domain.shoppingcart.dto.req;
-
+package ra.md5.domain.order.dto.res.admin;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.math.BigDecimal;
-
+import org.springframework.http.HttpStatus;
+import ra.md5.domain.order.dto.req.admin.OrderResDto;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ShoppingCartAddResDto {
-    String productName;
-    int orderQuantity;
-    BigDecimal totalPrice;
+public class OrderDetailsResponse {
+    int code;
+    HttpStatus message;
+    OrderResDto data;
 }
