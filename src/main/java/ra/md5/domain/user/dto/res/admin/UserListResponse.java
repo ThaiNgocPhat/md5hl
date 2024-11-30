@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
+import ra.md5.domain.user.dto.req.user.UserDto;
 import ra.md5.domain.user.entity.User;
 
 import java.util.List;
@@ -19,5 +20,7 @@ public class UserListResponse {
     HttpStatus message;
     long totalElements;
     int totalPages;
-    List<User> data;
+    int page;
+    int size;
+    List<UserDto> data;
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import ra.md5.domain.order.dto.req.user.OrderDto;
+import ra.md5.domain.order.dto.req.user.OrderSerialNumberDto;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,5 +16,5 @@ import ra.md5.domain.order.dto.req.user.OrderDto;
 public class OrderGetBySerialNumberResponse {
     int code;
     HttpStatus message;
-    OrderDto data;
+    OrderSerialNumberDto data;
 }

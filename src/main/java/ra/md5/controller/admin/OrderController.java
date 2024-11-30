@@ -2,13 +2,14 @@ package ra.md5.controller.admin;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ra.md5.domain.order.dto.req.admin.InvoicesOverTimeRequest;
+import ra.md5.domain.order.dto.req.admin.SalesRevenueRequest;
+import ra.md5.domain.order.dto.res.admin.InvoicesOverTimeResponse;
 import ra.md5.domain.order.dto.res.admin.OrderDetailsResponse;
 import ra.md5.domain.order.dto.res.admin.OrderResponse;
-import ra.md5.domain.order.service.admin.OrderServiceAdmin;
+import ra.md5.domain.order.dto.res.admin.SalesRevenueResponse;
+import ra.md5.domain.order.service.OrderServiceAdmin;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,4 +31,15 @@ public class OrderController {
         OrderDetailsResponse orderDetails = orderServiceAdmin.orderDetails(orderId);
         return new ResponseEntity<>(orderDetails, HttpStatus.OK);
     }
+    @GetMapping("/sales-revenue-over-time")
+    public ResponseEntity<SalesRevenueResponse> getSalesRevenueOverTime(@RequestBody SalesRevenueRequest request) {
+        SalesRevenueResponse response = orderServiceAdmin.getSalesRevenueOverTime(request);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/reports/invoices-over-time")
+    public ResponseEntity<InvoicesOverTimeResponse> getInvoicesOverTime(@RequestBody InvoicesOverTimeRequest request) {
+        InvoicesOverTimeResponse response = orderServiceAdmin.getInvoicesOverTime(request);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 }

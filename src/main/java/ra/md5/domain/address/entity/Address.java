@@ -17,7 +17,8 @@ import java.time.LocalDateTime;
 @Table(name = "address")
 public class Address {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "address_seq")
+    @SequenceGenerator(name = "address_seq", sequenceName = "address_sequence", allocationSize = 1)
     Integer addressId;
 
     @Column(name = "full_address", nullable = false)

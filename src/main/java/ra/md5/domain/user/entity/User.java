@@ -42,8 +42,8 @@ public class User{
     @Column(name = "phone", length = 11, nullable = false, unique = true)
     String phone;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Address> addresses = new ArrayList<>();
+    @Column(name = "address")
+    String address;
 
     @Column(name = "status")
     boolean status = true;

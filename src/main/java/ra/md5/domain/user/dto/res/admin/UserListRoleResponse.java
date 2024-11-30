@@ -16,6 +16,5 @@ import java.util.List;
 public class UserListRoleResponse {
     int code;
     HttpStatus message;
-    String username;
     List<UserRoleInfo> data;
 }

@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/v1/manager/**").hasAuthority("MANAGER") // Chỉ cho phép MANAGER
                         .requestMatchers("/api/v1/admin/**").hasAnyAuthority("ADMIN", "MANAGER")   // ADMIN và MANAGER
-                        .requestMatchers("/api/v1/users/**").hasAnyAuthority("USER", "ADMIN", "MANAGER")  // USER , ADMIN, MANAGER
+                        .requestMatchers("/api/v1/users/**").hasAnyAuthority("USER")  // USER
                         .requestMatchers("/auth/**", "/public/**", "/register", "/login", "/api/v1/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

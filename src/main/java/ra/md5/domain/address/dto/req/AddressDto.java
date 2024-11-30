@@ -10,6 +10,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AddressDto {
+    int addressId;
     String address;
     String phone;
     String receiveName;

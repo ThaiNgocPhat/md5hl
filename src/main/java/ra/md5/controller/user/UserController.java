@@ -7,33 +7,27 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import ra.md5.common.security.principal.UserDetailsCustom;
 import ra.md5.domain.address.dto.req.AddressAddDto;
-import ra.md5.domain.address.dto.res.AddressAddResponse;
-import ra.md5.domain.address.dto.res.AddressDeleteOneResponse;
-import ra.md5.domain.address.dto.res.AddressGetByIdForUserResponse;
+import ra.md5.domain.address.dto.res.AddressResponse;
 import ra.md5.domain.address.dto.res.AddressListForUserResponse;
 import ra.md5.domain.address.service.AddressService;
-import ra.md5.domain.order.dto.res.user.OrderCancelResponse;
 import ra.md5.domain.order.dto.res.user.OrderGetBySerialNumberResponse;
-import ra.md5.domain.order.dto.res.user.OrderGetStatusResponse;
-import ra.md5.domain.order.dto.res.user.OrderHistoryResponse;
-import ra.md5.domain.order.service.user.OrderService;
+import ra.md5.domain.order.dto.res.user.OrderResponse;
+import ra.md5.domain.order.service.OrderService;
 import ra.md5.domain.shoppingcart.dto.req.ShoppingCartAddDto;
 import ra.md5.domain.shoppingcart.dto.req.ShoppingCartChangeQuantityDto;
 import ra.md5.domain.shoppingcart.dto.req.ShoppingCartCheckoutDto;
 import ra.md5.domain.shoppingcart.dto.res.ShoppingCartAddResponse;
 import ra.md5.domain.shoppingcart.dto.res.ShoppingCartListCartResponse;
-import ra.md5.domain.shoppingcart.dto.res.ShoppingCartResponse;
+import ra.md5.domain.shoppingcart.dto.res.ShoppingCartOrderResponse;
 import ra.md5.domain.shoppingcart.service.ShoppingCartService;
 import ra.md5.domain.user.dto.req.user.UserChangePasswordDto;
 import ra.md5.domain.user.dto.req.user.UserUpdateDto;
-import ra.md5.domain.user.dto.res.user.UserChangePasswordResponse;
 import ra.md5.domain.user.dto.res.user.UserDetailsResponse;
 import ra.md5.domain.user.dto.res.user.UserUpdateResponse;
-import ra.md5.domain.user.service.user.UserService;
+import ra.md5.domain.user.service.UserService;
 import ra.md5.domain.wishlist.dto.req.WishlistRequest;
-import ra.md5.domain.wishlist.dto.res.WishListAddResponse;
+import ra.md5.domain.wishlist.dto.res.WishListResponse;
 import ra.md5.domain.wishlist.dto.res.WishListListResponse;
-import ra.md5.domain.wishlist.repository.WishListRepository;
 import ra.md5.domain.wishlist.service.WishListService;
 
 @RestController
@@ -59,21 +53,21 @@ public class UserController {
         return new ResponseEntity<>(userDetailsResponse, HttpStatus.OK);
     }
     @PutMapping("/account/change-password")
-    public ResponseEntity<UserChangePasswordResponse> changePassword(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom, @Valid  @RequestBody UserChangePasswordDto request){
-        UserChangePasswordResponse userChangePasswordResponse = userService.changePassword(userDetailsCustom, request);
-        return new ResponseEntity<>(userChangePasswordResponse, HttpStatus.OK);
+    public ResponseEntity<?> changePassword(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom, @Valid  @RequestBody UserChangePasswordDto request){
+        userService.changePassword(userDetailsCustom, request);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     //ADDRESS
     @PostMapping("/account/address")
-    public ResponseEntity<AddressAddResponse> addAddress(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom, @Valid @RequestBody AddressAddDto request){
-        AddressAddResponse addressAddResponse = addressService.addAddress(userDetailsCustom, request);
+    public ResponseEntity<AddressResponse> addAddress(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom, @Valid @RequestBody AddressAddDto request){
+        AddressResponse addressAddResponse = addressService.addAddress(userDetailsCustom, request);
         return new ResponseEntity<>(addressAddResponse, HttpStatus.CREATED);
     }
     @DeleteMapping("/account/address/{addressId}")
-    public ResponseEntity<AddressDeleteOneResponse> deleteAddress(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom, @PathVariable Integer addressId){
-        AddressDeleteOneResponse addressDeleteOneResponse = addressService.deleteOneAddress(userDetailsCustom, addressId);
-        return new ResponseEntity<>(addressDeleteOneResponse, HttpStatus.OK);
+    public ResponseEntity<?> deleteAddress(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom, @PathVariable Integer addressId){
+        addressService.deleteOneAddress(userDetailsCustom, addressId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @GetMapping("/account/address")
     public ResponseEntity<AddressListForUserResponse> listAddressForUser(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom){
@@ -81,8 +75,8 @@ public class UserController {
         return new ResponseEntity<>(addresses, HttpStatus.OK);
     }
     @GetMapping("/account/address/{addressId}")
-    public ResponseEntity<AddressGetByIdForUserResponse> getAddressById(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom, @PathVariable Integer addressId){
-        AddressGetByIdForUserResponse addressGetByIdForUserResponse = addressService.getAddressById(userDetailsCustom, addressId);
+    public ResponseEntity<AddressResponse> getAddressById(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom, @PathVariable Integer addressId){
+        AddressResponse addressGetByIdForUserResponse = addressService.getAddressById(userDetailsCustom, addressId);
         return new ResponseEntity<>(addressGetByIdForUserResponse, HttpStatus.OK);
     }
 
@@ -98,31 +92,31 @@ public class UserController {
         return new ResponseEntity<>(shoppingCartAddResponse, HttpStatus.CREATED);
     }
     @PutMapping("/cart/items/{cartItemId}")
-    public ResponseEntity<ShoppingCartResponse> changeOrderQuantity(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom, @PathVariable Integer cartItemId, @Valid @RequestBody ShoppingCartChangeQuantityDto request){
-        ShoppingCartResponse shoppingCartChangeQuantityResponse = shoppingCartService.changeOrderQuantity(userDetailsCustom, cartItemId, request);
-        return new ResponseEntity<>(shoppingCartChangeQuantityResponse, HttpStatus.OK);
+    public ResponseEntity<?> changeOrderQuantity(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom, @PathVariable Integer cartItemId, @Valid @RequestBody ShoppingCartChangeQuantityDto request){
+        shoppingCartService.changeOrderQuantity(userDetailsCustom, cartItemId, request);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @DeleteMapping("/cart/items/{cartItemId}")
-    public ResponseEntity<ShoppingCartResponse> deleteOneProduct(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom, @PathVariable Integer cartItemId){
-        ShoppingCartResponse shoppingCartDeleteOneProductResponse = shoppingCartService.deleteOneProduct(userDetailsCustom, cartItemId);
-        return new ResponseEntity<>(shoppingCartDeleteOneProductResponse, HttpStatus.OK);
+    public ResponseEntity<String> deleteOneProduct(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom, @PathVariable Integer cartItemId){
+        shoppingCartService.deleteOneProduct(userDetailsCustom, cartItemId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @DeleteMapping("/cart/clear")
-    public ResponseEntity<ShoppingCartResponse> clearCart(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom){
-        ShoppingCartResponse shoppingCartClearCartResponse = shoppingCartService.clearCart(userDetailsCustom);
-        return new ResponseEntity<>(shoppingCartClearCartResponse, HttpStatus.OK);
+    public ResponseEntity<?> clearCart(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom){
+        shoppingCartService.clearCart(userDetailsCustom);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @PostMapping("/checkout")
-    public ResponseEntity<ShoppingCartResponse> checkout(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom,
-                                                  @RequestBody ShoppingCartCheckoutDto checkoutDto) {
-        ShoppingCartResponse response = shoppingCartService.checkout(userDetailsCustom, checkoutDto);
+    public ResponseEntity<ShoppingCartOrderResponse> checkout(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom,
+                                                              @RequestBody ShoppingCartCheckoutDto checkoutDto) {
+        ShoppingCartOrderResponse response = shoppingCartService.checkout(userDetailsCustom, checkoutDto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     // ORDER
     @GetMapping("/history")
-    public ResponseEntity<OrderHistoryResponse> getHistory(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom){
-        OrderHistoryResponse orderHistoryResponse = orderService.getOrderHistory(userDetailsCustom);
+    public ResponseEntity<OrderResponse> getHistory(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom){
+        OrderResponse orderHistoryResponse = orderService.getOrderHistory(userDetailsCustom);
         return new ResponseEntity<>(orderHistoryResponse, HttpStatus.OK);
     }
     @GetMapping("/history/{serialNumber}")
@@ -131,20 +125,20 @@ public class UserController {
         return new ResponseEntity<>(orderHistoryResponse, HttpStatus.OK);
     }
     @GetMapping("/history/status/{orderStatus}")
-    public ResponseEntity<OrderGetStatusResponse> getHistoryByStatus(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom, @PathVariable String orderStatus){
-        OrderGetStatusResponse orderGetStatusResponse = orderService.getOrderByStatus(userDetailsCustom, orderStatus);
+    public ResponseEntity<OrderResponse> getHistoryByStatus(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom, @PathVariable String orderStatus){
+        OrderResponse orderGetStatusResponse = orderService.getOrderByStatus(userDetailsCustom, orderStatus);
         return new ResponseEntity<>(orderGetStatusResponse, HttpStatus.OK);
     }
     @PutMapping("/history/{orderId}/cancel")
-    public ResponseEntity<OrderCancelResponse> orderChangeStatus(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom, @PathVariable Integer orderId){
-        OrderCancelResponse orderCancelResponse = orderService.cancelOrder(userDetailsCustom, orderId);
-        return new ResponseEntity<>(orderCancelResponse, HttpStatus.OK);
+    public ResponseEntity<?> orderChangeStatus(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom, @PathVariable Integer orderId){
+        orderService.cancelOrder(userDetailsCustom, orderId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     //WISHLIST
     @PostMapping("/wish-list")
-    public ResponseEntity<WishListAddResponse> addToWishlist(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom, @RequestBody WishlistRequest request) {
-        WishListAddResponse response = wishListService.addWishList(userDetailsCustom, request);
+    public ResponseEntity<WishListResponse> addToWishlist(@AuthenticationPrincipal UserDetailsCustom userDetailsCustom, @RequestBody WishlistRequest request) {
+        WishListResponse response = wishListService.addWishList(userDetailsCustom, request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
     @GetMapping("/wish-list")
@@ -152,11 +146,11 @@ public class UserController {
         WishListListResponse getAllWishList = wishListService.getAllWishList(userDetailsCustom);
         return new ResponseEntity<>(getAllWishList, HttpStatus.OK);
     }
-//
-//    // Xóa sản phẩm khỏi danh sách yêu thích
-//    @DeleteMapping("/wish-list/{wishlistId}")
-//    public ResponseEntity<?> removeFromWishlist(@PathVariable String wishlistId) {
-//        wishlistService.removeProductFromWishlist(wishlistId);
-//        return ResponseEntity.ok("Product removed from wishlist");
-//    }
+
+    // Xóa sản phẩm khỏi danh sách yêu thích
+    @DeleteMapping("/wish-list/{wishlistId}")
+    public ResponseEntity<?> removeFromWishlist(@PathVariable Integer wishlistId) {
+        wishListService.deleteWishList(wishlistId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
+import ra.md5.domain.user.dto.req.manager.UserChangeStatusDto;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,6 +15,5 @@ import org.springframework.http.HttpStatus;
 public class UserChangeStatusResponse {
     int code;
     HttpStatus message;
-    String username;
-    boolean status;
+    UserChangeStatusDto data;
 }

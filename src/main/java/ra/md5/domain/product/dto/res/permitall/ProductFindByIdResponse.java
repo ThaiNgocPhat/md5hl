@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
+import ra.md5.domain.product.dto.req.permitall.ProductDto;
 import ra.md5.domain.product.dto.req.permitall.ProductFindByIdDto;
 
 @AllArgsConstructor

@@ -15,5 +15,6 @@ import java.math.BigDecimal;
 public class ShoppingCartAddResDto {
     String productName;
     int orderQuantity;
+    BigDecimal unitPrice;
     BigDecimal totalPrice;
 }

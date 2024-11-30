@@ -1,6 +1,8 @@
 package ra.md5.common.security.principal;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,19 +12,20 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDetailsCustom implements UserDetails {
-    private String userId;
-    private String username;
-    private String email;
-    private String firstName;
-    private String lastName;
-    private String password;
-    private String avatar;
-    private String phone;
-    private String address;
-    private boolean status;
-    private boolean delete;
-    private Collection<? extends GrantedAuthority> authorities;
+    String userId;
+    String username;
+    String email;
+    String firstName;
+    String lastName;
+    String password;
+    String avatar;
+    String phone;
+    String address;
+    boolean status;
+    boolean delete;
+    Collection<? extends GrantedAuthority> authorities;
 
     public UserDetailsCustom(User user) {
         this.userId = user.getUserId();
@@ -40,7 +43,7 @@ public class UserDetailsCustom implements UserDetails {
                 .map(role -> new SimpleGrantedAuthority(role.getRoleName().name()))
                 .collect(Collectors.toList());
     }
-
+    User user;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;

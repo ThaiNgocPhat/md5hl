@@ -16,3 +16,4 @@ public class ProductFindByIdResponse {
     HttpStatus message;
     Product data;
 }
+    

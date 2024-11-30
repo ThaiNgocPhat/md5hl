@@ -1,17 +1,13 @@
 package ra.md5.domain.address.serviceimpl;
-
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ra.md5.common.security.principal.UserDetailsCustom;
 import ra.md5.domain.address.dto.req.AddressAddDto;
-import ra.md5.domain.address.dto.req.AddressAddResDto;
 import ra.md5.domain.address.dto.req.AddressDto;
 import ra.md5.domain.address.dto.req.AddressListForUserResDto;
-import ra.md5.domain.address.dto.res.AddressAddResponse;
-import ra.md5.domain.address.dto.res.AddressDeleteOneResponse;
-import ra.md5.domain.address.dto.res.AddressGetByIdForUserResponse;
+import ra.md5.domain.address.dto.res.AddressResponse;
 import ra.md5.domain.address.dto.res.AddressListForUserResponse;
 import ra.md5.domain.address.entity.Address;
 import ra.md5.domain.address.exception.AddressNotFoundException;
@@ -32,7 +28,7 @@ public class AddressServiceImpl implements AddressService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     @Override
-    public AddressAddResponse addAddress(UserDetailsCustom userDetailsCustom, AddressAddDto request) {
+    public AddressResponse addAddress(UserDetailsCustom userDetailsCustom, AddressAddDto request) {
         // Kiểm tra người dùng có tồn tại
         User user = userRepository.findByUsername(userDetailsCustom.getUsername())
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng"));
@@ -53,9 +49,9 @@ public class AddressServiceImpl implements AddressService {
         // Lưu địa chỉ vào cơ sở dữ liệu
         Address savedAddress = addressRepository.save(addressEntity);
         // Ánh xạ Entity đã lưu sang DTO để trả về
-        AddressAddResDto responseDto = modelMapper.map(savedAddress, AddressAddResDto.class);
+        AddressDto responseDto = modelMapper.map(savedAddress, AddressDto.class);
         // Tạo phản hồi
-        AddressAddResponse response = new AddressAddResponse();
+        AddressResponse response = new AddressResponse();
         response.setCode(201);
         response.setMessage(HttpStatus.CREATED);
         response.setData(responseDto);
@@ -63,7 +59,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public AddressDeleteOneResponse deleteOneAddress(UserDetailsCustom userDetailsCustom, Integer addressId) {
+    public void deleteOneAddress(UserDetailsCustom userDetailsCustom, Integer addressId) {
         // Kiểm tra người dùng có tồn tại
         User user = userRepository.findByUsername(userDetailsCustom.getUsername())
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng"));
@@ -72,12 +68,6 @@ public class AddressServiceImpl implements AddressService {
                 .orElseThrow(() -> new AddressNotFoundException("Không tìm thấy id " + addressId));
         //Xoá địa chỉ
         addressRepository.delete(address);
-        // Tạo phản hồi
-        AddressDeleteOneResponse response = new AddressDeleteOneResponse();
-        response.setCode(200);
-        response.setMessage(HttpStatus.OK);
-        response.setData("Xoá thành công địa chỉ với id là: " + addressId);
-        return response;
     }
 
     @Override
@@ -106,7 +96,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public AddressGetByIdForUserResponse getAddressById(UserDetailsCustom userDetailsCustom, Integer addressId) {
+    public AddressResponse getAddressById(UserDetailsCustom userDetailsCustom, Integer addressId) {
         // Kiểm tra người dùng có tồn tại
         User user = userRepository.findByUsername(userDetailsCustom.getUsername())
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng"));
@@ -116,7 +106,7 @@ public class AddressServiceImpl implements AddressService {
         //Ánh xạ
         AddressDto addressDto = modelMapper.map(address, AddressDto.class);
         // Tạo phản hồi
-        AddressGetByIdForUserResponse response = new AddressGetByIdForUserResponse();
+        AddressResponse response = new AddressResponse();
         response.setCode(200);
         response.setMessage(HttpStatus.OK);
         response.setData(addressDto);

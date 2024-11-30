@@ -1,20 +1,25 @@
 package ra.md5.domain.product.dto.res.permitall;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
-import ra.md5.domain.product.dto.req.permitall.ProductListDto;
+import ra.md5.domain.product.dto.req.permitall.ProductDto;
 
 import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductListResponse {
-    private int code;
-    private HttpStatus message;
-    private int totalElements;
-    private int totalPages;
-    private List<ProductListDto> data;
+    int code;
+    HttpStatus message;
+    int totalElements;
+    int totalPages;
+    int page;
+    int size;
+    List<ProductDto> data;
 }

@@ -13,6 +13,6 @@ import org.springframework.http.HttpStatus;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderCancelResponse {
     int code;
-    HttpStatus message;
-    String data;
+    HttpStatus status;
+    String message;
 }

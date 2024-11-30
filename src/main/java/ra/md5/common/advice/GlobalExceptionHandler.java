@@ -22,6 +22,7 @@ import ra.md5.domain.user.dto.res.user.ResponseError;
 import ra.md5.domain.user.exception.DuplicateException;
 import ra.md5.domain.user.exception.InvalidCredentialsException;
 import ra.md5.domain.user.exception.NotFoundException;
+import ra.md5.domain.user.exception.UserException;
 import ra.md5.domain.wishlist.exception.WishListException;
 
 import java.util.HashMap;
@@ -114,10 +115,14 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(OrderException.class)
     public ResponseEntity<ResponseError> NotFoundException(OrderException e){
-        return new ResponseEntity<>(new ResponseError(404,HttpStatus.NOT_FOUND,e.getMessage()), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new ResponseError(400,HttpStatus.BAD_REQUEST,e.getMessage()), HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(WishListException.class)
     public ResponseEntity<ResponseError> NotFoundException(WishListException e){
+        return new ResponseEntity<>(new ResponseError(404,HttpStatus.NOT_FOUND,e.getMessage()), HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(UserException.class)
+    public ResponseEntity<ResponseError> NotFoundException(UserException e){
         return new ResponseEntity<>(new ResponseError(404,HttpStatus.NOT_FOUND,e.getMessage()), HttpStatus.NOT_FOUND);
     }
 }

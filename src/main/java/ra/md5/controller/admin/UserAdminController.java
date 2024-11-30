@@ -3,14 +3,10 @@ package ra.md5.controller.admin;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import ra.md5.domain.user.dto.res.admin.UserListResponse;
-import ra.md5.domain.user.dto.res.admin.UserListRoleResponse;
-import ra.md5.domain.user.dto.res.admin.UserSearchResponse;
-import ra.md5.domain.user.service.admin.UserServiceAdmin;
+import org.springframework.web.bind.annotation.*;
+import ra.md5.domain.user.dto.req.admin.TopSpendingRequest;
+import ra.md5.domain.user.dto.res.admin.*;
+import ra.md5.domain.user.service.UserServiceAdmin;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,4 +31,16 @@ public class UserAdminController {
         UserSearchResponse searchUsername = userServiceAdmin.searchUsername(username);
         return new ResponseEntity<>(searchUsername, HttpStatus.OK);
     }
+    @GetMapping("/reports/top-spending-customers")
+    public ResponseEntity<TopSpendingResponse> getTopSpendingCustomers(@RequestBody TopSpendingRequest request) {
+        TopSpendingResponse response = userServiceAdmin.getTopSpendingCustomers(request);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/reports/new-accounts-this-month")
+    public ResponseEntity<NewAccountsResponse> getNewAccountsThisMonth() {
+        NewAccountsResponse response = userServiceAdmin.getNewAccountsThisMonth();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
 }

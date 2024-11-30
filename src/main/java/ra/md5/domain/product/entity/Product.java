@@ -1,12 +1,10 @@
 package ra.md5.domain.product.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ra.md5.domain.category.entity.Category;
-import ra.md5.domain.wishlist.entity.WishList;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

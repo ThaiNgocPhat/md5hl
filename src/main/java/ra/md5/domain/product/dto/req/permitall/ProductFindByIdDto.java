@@ -12,11 +12,12 @@ import java.math.BigDecimal;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductFindByIdDto {
+    Integer productId;
     String sku;
     String productName;
     String description;
     Integer stock;
     BigDecimal unitPrice;
     String image;
-    int categoryId;
+    CategoryDto category;
 }

@@ -16,5 +16,7 @@ public class ProductListResponse {
     private HttpStatus message;
     private long totalElements;
     private int totalPages;
+    int page;
+    int size;
     private List<Product> data;
 }

@@ -5,13 +5,13 @@ import ra.md5.domain.shoppingcart.dto.req.ShoppingCartChangeQuantityDto;
 import ra.md5.domain.shoppingcart.dto.req.ShoppingCartCheckoutDto;
 import ra.md5.domain.shoppingcart.dto.res.ShoppingCartAddResponse;
 import ra.md5.domain.shoppingcart.dto.res.ShoppingCartListCartResponse;
-import ra.md5.domain.shoppingcart.dto.res.ShoppingCartResponse;
+import ra.md5.domain.shoppingcart.dto.res.ShoppingCartOrderResponse;
 
 public interface ShoppingCartService {
     ShoppingCartListCartResponse getListCart(UserDetailsCustom userDetailsCustom);
     ShoppingCartAddResponse addToCart(UserDetailsCustom userDetailsCustom, ShoppingCartAddDto request);
-    ShoppingCartResponse changeOrderQuantity(UserDetailsCustom userDetailsCustom, Integer cartItem, ShoppingCartChangeQuantityDto request);
-    ShoppingCartResponse deleteOneProduct(UserDetailsCustom userDetailsCustom, Integer cartItem);
-    ShoppingCartResponse clearCart(UserDetailsCustom userDetailsCustom);
-    ShoppingCartResponse checkout(UserDetailsCustom userDetailsCustom, ShoppingCartCheckoutDto request);
+    void changeOrderQuantity(UserDetailsCustom userDetailsCustom, Integer cartItem, ShoppingCartChangeQuantityDto request);
+    void deleteOneProduct(UserDetailsCustom userDetailsCustom, Integer cartItem);
+    void clearCart(UserDetailsCustom userDetailsCustom);
+    ShoppingCartOrderResponse checkout(UserDetailsCustom userDetailsCustom, ShoppingCartCheckoutDto request);
 }

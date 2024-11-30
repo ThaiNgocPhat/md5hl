@@ -6,13 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
+import ra.md5.domain.category.entity.Category;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CategoryResponse<T>{
+public class CategoryResponse{
     int code;
     HttpStatus message;
-    T data;
+    Category data;
 }

@@ -17,6 +17,6 @@ public class WishListProductDetailDto {
     String productName;
     BigDecimal unitPrice;
     String description;
-    Integer quantity;
+    Integer stock;
     String image;
 }
